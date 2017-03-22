@@ -9,7 +9,6 @@ public class taskone {
         int a = in.nextInt();
         b = b + a;
         }
-        //это задачи? да
         System.out.println("����� �����: "+b);
         
     }
