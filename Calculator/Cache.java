@@ -1,4 +1,4 @@
-/* package com.company;
+package com.company;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,94 +8,121 @@ public class Cache {
 
     String trueNumber;
 
-    private List<Double> firstLevelCache = new LinkedList<>();
+    private List<String> firstLevelCache = new LinkedList<>();
 
-    private List<Double> secondLevelCache = new ArrayList<>();
+    private List<String> secondLevelCache = new ArrayList<>();
 
 
     public String getNumber(String x)
     {
-        if (getNumberFromFirstLevel(x) != 0)
+        if (getNumberFromFirstLevel(x) != "")
         {
-            trueNumber = String.valueOf(getNumberFromFirstLevel(x));
+            trueNumber = getNumberFromFirstLevel(x);
+            System.out.println(getNumberFromFirstLevel(x) + " got!");
         }
-        else if (getNumberFromSecondLevel(x) != 0){
+        else if (getNumberFromSecondLevel(x) != ""){
 
-            trueNumber = String.valueOf(getNumberFromSecondLevel(x));
+            trueNumber = getNumberFromSecondLevel(x);
+            System.out.println(getNumberFromSecondLevel(x) + " got!");
         }
         return trueNumber;
 
 
     }
 
+
     public boolean checkNumber(String p){
 
-        double number = Double.parseDouble(p);
+        String number = p;
 
         for(int i = 0; i < firstLevelCache.size(); i++){
 
-            if(number == firstLevelCache.get(i)){
+            String [] s = firstLevelCache.get(i).split(" = ");
 
+            if(number.equals(s[0])){
+
+                System.out.println("Check true");
                 return true;
+
             }
         }
         for(int i = 0; i < secondLevelCache.size(); i++){
 
-            if(number == secondLevelCache.get(i)){
+            String [] s = secondLevelCache.get(i).split(" = ");
 
+            if(number.equals(s[0])){
+
+                System.out.println("Check true");
                 return true;
+
             }
 
         }
         return false;
     }
-    //getFirst getLast
-    private double getNumberFromFirstLevel(String x) {
 
-        double number = Double.parseDouble(x);
-        double numberForReturn = 0;
+
+    public String getNumberFromFirstLevel(String x) {
+
+        String number = x;
+        String numberForReturn = "";
+
         for(int i = 0; i < firstLevelCache.size(); i++){
 
-            if(number == firstLevelCache.get(i)){
+            String [] s = firstLevelCache.get(i).split(" = ");
 
-                numberForReturn = firstLevelCache.get(i);
+            if(number.equals(s[0])){
 
-                double temp = firstLevelCache.get(i);
+                numberForReturn = s[1];
 
+                String temp = firstLevelCache.get(i);
                 firstLevelCache.set(i, firstLevelCache.get(0));
                 firstLevelCache.set(0, temp);
+
             }
         }
         return numberForReturn;
     }
-    private double getNumberFromSecondLevel(String x){
 
-        double numberForReturn = 0;
 
-        double number = Double.parseDouble(x);
+    private String getNumberFromSecondLevel(String x){
+
+        String numberForReturn = "";
+
+        String number = x;
 
         for(int i = 0; i < secondLevelCache.size(); i++){
 
-            if(number == secondLevelCache.get(i)){
+            String [] s = secondLevelCache.get(i).split(" = ");
 
-                numberForReturn = secondLevelCache.get(i);
+            if(number.equals(s[0])){
+
+                numberForReturn = s[1];
+
             }
         }
         return numberForReturn;
     }
-    public void addNumber(String x){
+
+    public void addNumber(String s, String r){
 
         if(firstLevelCache.size() == 10) {
 
-            double temp = firstLevelCache.get(9);
+            for (int i=0; i <= firstLevelCache.size(); i++){
 
-            secondLevelCache.add(temp);
+                if (i == 0) {
 
-            firstLevelCache.remove(9);
+                    String temp = firstLevelCache.get(i);
+                    secondLevelCache.add(temp);
+                    firstLevelCache.remove(i);
+
+                }
+            }
         }
-        else {
-            firstLevelCache.add(Double.parseDouble(x));
-        }
-    }
+        firstLevelCache.add(s + " = " + r);
+
+        System.out.println(firstLevelCache);
+        System.out.println(secondLevelCache);
+
 }
-*/
+}

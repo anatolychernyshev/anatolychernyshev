@@ -1,35 +1,49 @@
-/*  package com.company;
+package com.company;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Archive {
+
+
+
     public static void fullLog(String EXPATH, String PATH, String ZIPPATH) throws IOException {
 
-        File f = null;
-        File f1 = null;
-        File f2 = null;
+        File f = new File(PATH);
+        File temp = f;
+        File f1 = new File(EXPATH);
 
-        f = new File(EXPATH);
-        f2 = f;
-        f1 = new File(PATH);
+        FileReader fileReader = new FileReader(PATH);
+        LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
+        int i = 0;
 
-        f.renameTo(f1);
-        f2.createNewFile();
+        while (lineNumberReader.readLine() != null){
+            i++;
+            System.out.println("Line: " + i);
+            if (i > 10) {
 
-        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(ZIPPATH));
-        FileInputStream fileInputStream = new FileInputStream("ex-Math.txt");
-        ZipEntry zipEntry = new ZipEntry(EXPATH);
-        zipOutputStream.putNextEntry(zipEntry);
-        byte [] buffer = new byte[fileInputStream.available()];
-        fileInputStream.read(buffer);
-        zipOutputStream.write(buffer);
-        zipOutputStream.closeEntry();
-        zipOutputStream.close();
+                f.renameTo(f1);
+                temp.createNewFile();
 
+                try(ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(ZIPPATH));
+                    FileInputStream fileInputStream = new FileInputStream(EXPATH))
+                {
+                    ZipEntry zipEntry = new ZipEntry("ex-Math.txt");
+                    zOut.putNextEntry(zipEntry);
+                    byte[] buffer = new byte[fileInputStream.available()];
+                    fileInputStream.read(buffer);
+                    zOut.write(buffer);
+                    zOut.closeEntry();
+                }
+                catch(Exception ex){
 
+                    System.out.println(ex.getMessage());
+                }
 
+                f1.delete();
+                break;
+            }
+        }
     }
 }
-    */

@@ -8,11 +8,12 @@ import java.io.IOException;
 
 public class CalcFrame {
     private JTextField display;
-    private String EXPATH = "D:\\Java\\NORMCALC\\Math.txt";
+    private String PATH = "D:\\Java\\NORMCALC\\Math.txt";
     private String ZIPPATH = "D:\\Java\\NORMCALC\\ex-Math.zip";
-    private String PATH = "D:\\Java\\NORMCALC\\ex-Math.txt";
+    private String EXPATH = "D:\\Java\\NORMCALC\\ex-Math.txt";
     public JFrame mainCalcFrame;
     private String DOUBLESIGN = "Don`t try to enter double arithmetic sign!";
+    private Cache cache = new Cache();
 
     int count = 0;
 
@@ -197,20 +198,31 @@ public class CalcFrame {
                     String numbers = display.getText();
                     CollectionForPriority collectionForPriority = new CollectionForPriority();
                     String result = collectionForPriority.PriorityCalc(numbers);
+
+                    if(cache.checkNumber(numbers))
+                        numbers = cache.getNumber(numbers);
+                    else cache.addNumber(numbers, result);
+
                     display.setText(result);
 
                     Writer.write("Math.txt", numbers + " = " + result + "\n");
-                    /*  Archive.fullLog(EXPATH,PATH,ZIPPATH);
 
-                    Cache c = new Cache();
+                    Thread myThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Archive.fullLog(EXPATH,PATH,ZIPPATH);
+                                System.out.println("Hello");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
-                    if(c.checkNumber(numbers))
-                        numbers = c.getNumber(numbers);
-                        else c.addNumber(numbers);
-                    if(c.checkNumber(display.getText()))
-                        display.setText(c.getNumber(display.getText()));
-                    else c.addNumber(display.getText());
-                    break;  */
+                    myThread.start();
+
+
+                    break;
             }
                 if(count > 0) {
                     display.setText("");
