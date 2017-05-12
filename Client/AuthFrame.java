@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.net.CreateRequest;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -48,35 +50,38 @@ public class AuthFrame {
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Authentication auth = new Authentication(loginTextField.getText().toString(), passwordField.getText().toString());
+                Parser parser = new Parser();
+                CalcFrame cFrame = new CalcFrame();
+                String response = null;
+                String login = loginTextField.getText().toString();
+                char[] password = passwordField.getText().toCharArray();
                 try {
-                    CalcFrame cFrame = new CalcFrame();
-                    switch (auth.authChecker()) {
-                        case 0:
+
+                    response = CreateRequest.getRequest(parser.authString(login, password));
+
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    switch (response) {
+                        case "0":
                             JOptionPane.showMessageDialog(mainAuthFrame, REGSUCCESS, "Успешная Регистрация",
                                     JOptionPane.DEFAULT_OPTION);
-                            auth.registrationOfNewUser();
                             mainAuthFrame.setVisible(false);
                             cFrame.createMainCalcFrame();
                             break;
-                        case 1:
+                        case "1":
                             JOptionPane.showMessageDialog(mainAuthFrame, AUTHSUCCESS, "Успешная Авторизация",
                                     JOptionPane.DEFAULT_OPTION);
                             cFrame.createMainCalcFrame();
                             mainAuthFrame.setVisible(false);
                             break;
-                        case -1:
+                        case "-1":
                             JOptionPane.showMessageDialog(mainAuthFrame, AUTHFAILED, "Неудачная Авторизация",
                                     JOptionPane.DEFAULT_OPTION);
                             loginTextField.setText("");
                             passwordField.setText("");
                             break;
                     }
-            } catch (NoSuchAlgorithmException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
             }
         });
 

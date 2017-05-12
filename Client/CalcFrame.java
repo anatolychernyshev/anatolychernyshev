@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.net.CreateRequest;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,10 +9,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class CalcFrame {
-    private JTextField display;
     private final String PATH = "D:\\Java\\NORMCALC\\Math.txt";
     private final String ZIPPATH = "D:\\Java\\NORMCALC\\ex-Math.zip";
     private final String EXPATH = "D:\\Java\\NORMCALC\\ex-Math.txt";
+    private JTextField display;
     public JFrame mainCalcFrame;
     private String DOUBLESIGN = "Don`t try to enter double arithmetic sign!";
 
@@ -197,23 +199,27 @@ public class CalcFrame {
             case "=":
                 if(count == 0){
                     String numbers = display.getText();
-                    CollectionForPriority collectionForPriority = new CollectionForPriority();
-                    String result = collectionForPriority.PriorityCalc(numbers);
+                    Parser parser = new Parser();
+                    String response = CreateRequest.getRequest(parser.calcString(numbers));
 
                     if(cache.checkNumber(numbers))
                         numbers = cache.getNumber(numbers);
-                    else cache.addNumber(numbers, result);
+                    else cache.addNumber(numbers, response);
 
-                    display.setText(result);
+                    display.setText(response);
 
-                    Writer.write("Math.txt", numbers + " = " + result + "\n");
+                    try {
+                        Writer.write("Math.txt", numbers + " = " + response + "\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     Thread myThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 Archive.fullLog(EXPATH,PATH,ZIPPATH);
-                                System.out.println("Hello");
+                                System.out.println("Hello from thread!");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

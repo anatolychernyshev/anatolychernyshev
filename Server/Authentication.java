@@ -22,7 +22,7 @@ public class Authentication {
     1 - Auth success;
     */
 
-    public int authChecker() throws NoSuchAlgorithmException {
+    public int authChecker() throws NoSuchAlgorithmException, IOException {
         Reader reader = new Reader();
         String[] data = reader.read();
         if (data == null) return 0;
@@ -31,18 +31,22 @@ public class Authentication {
                 String possibleData = data[i];
                 String[] splitedLogAndPass = possibleData.split("@");
                 if (splitedLogAndPass[0].equals(login)) {
-                    if (splitedLogAndPass[1].equals(Encoder.crypt(password.toCharArray()))) {
+                    if (splitedLogAndPass[1].equals(password)) {
                         return 1;
                     } else {
                         return -1;
                     }
                 }
-            } else return 0;
+            } else {
+                registrationOfNewUser();
+                return 0;
+            }
         }
+        registrationOfNewUser();
         return 0;
     }
     public void registrationOfNewUser() throws NoSuchAlgorithmException, IOException {
-        Writer.write("Data.txt", "#" + login + "@" + Encoder.crypt(password.toCharArray()));
+        Writer.write("Data.txt", "#" + login + "@" + password);
 
     }
 }
