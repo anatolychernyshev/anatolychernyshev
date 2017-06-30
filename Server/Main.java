@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 
 public class Main {
-    public static void main(String[] args) throws Throwable {
+    public static void main(String[] args) throws Exception {
         ServerSocket server = new ServerSocket(44444);
         int count = 0;
         while(true){
